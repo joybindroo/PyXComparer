@@ -22,7 +22,7 @@ Install the required dependencies:
 **pip install -r requirements.txt**
 
 Run the PyXComparer application:
-**python main.py**
+**python xcomparer.py**
 
 ## Usage
 - Select the two versions of the XLSForms you want to compare.

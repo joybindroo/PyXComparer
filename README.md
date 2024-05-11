@@ -30,7 +30,7 @@ Run the PyXComparer application:
 - The results will be displayed in the GUI, highlighting additions, deletions, and modifications.
 
 ## Human-Readable Data Dictionary or Metadata
-PyXComparer not only helps in comparing different versions of ODK XLSForms but also facilitates the generation of a human-readable data dictionary or metadata. By parsing and analyzing the structure of the XLSForm files, PyXComparer extracts information such as questions, choices, and settings. This information is then organized and presented in a clear and concise format, making it easily understandable for teams working on data collection and analysis.
+PyXComparer not only helps in comparing different versions of ODK XLSForms but also facilitates the generation of a human-readable data dictionary or metadata. By parsing and analyzing the structure of the XLSForm files, PyXComparer extracts information such as questions, choices, and settings like data validation and whehter question is mandatory or not. This information is then organized and presented in a clear and concise format, making it easily understandable for teams working on data collection and analysis.
 
 The generated data dictionary provides detailed descriptions of each field, including the question text, data type, constraints, and relevant notes. Additionally, it highlights any changes or updates made between different versions of the XLSForms, ensuring that teams are aware of any modifications and can adapt their data collection and analysis processes accordingly.
 

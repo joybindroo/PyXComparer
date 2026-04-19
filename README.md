@@ -1,6 +1,6 @@
 # PyXComparer
 
-**PyXComparer** is a Python-based tool designed to simplify the process of monitoring changes between different versions of ODK XLSForms. It provides both GUI and CLI interfaces for comparing XLSForm files, helping teams ensure data integrity and consistency in their survey projects.
+**PyXComparer** is a Python-based tool designed to simplify the process of monitoring changes between different versions of ODK XLSForms. It provides GUI, CLI, and Web interfaces for comparing XLSForm files, helping teams ensure data integrity and consistency in their survey projects.
 
 [![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -9,11 +9,12 @@
 
 - **Compare XLSForm versions** - Identify changes between survey versions
 - **Multiple output formats** - HTML, JSON, YAML reports
-- **GUI and CLI interfaces** - Choose your preferred workflow
+- **Three Interface Modes** - GUI, CLI, and Web (Flask)
 - **Human-readable metadata** - Generate data dictionaries from XLSForms
 - **Batch processing** - Compare multiple form pairs at once
 - **Change categorization** - Track additions, deletions, and modifications
 - **Summary statistics** - Quick overview of changes
+- **Containerized** - Ready for deployment via Docker
 
 ## 🚀 Quick Start
 
@@ -40,7 +41,22 @@ pip install -e ".[dev]"
 
 ### Usage
 
-#### CLI Mode (Recommended for automation)
+#### 🌐 Web Mode (Browser-based)
+The easiest way for non-technical users to compare forms.
+
+**Using Docker:**
+```bash
+docker-compose up -d
+```
+Then visit: `http://localhost:5000`
+
+**Local Run:**
+```bash
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+python src/pyxcomparer/web/app.py
+```
+
+#### 💻 CLI Mode (Recommended for automation)
 
 **Compare two forms:**
 ```bash
@@ -68,7 +84,7 @@ pyxcomparer batch ./forms/ -o ./reports/
 pyxcomparer summary v1.xlsx v2.xlsx
 ```
 
-#### GUI Mode
+#### 🖥️ GUI Mode
 
 ```bash
 python pyxcomparer.py
@@ -82,7 +98,7 @@ pyxcomparer gui
 ## 📋 Workflow
 
 ```
-1. Select/Input XLSForm files (.xlsx)
+1. Select/Input XLSForm files (.xlsx) via Web, GUI, or CLI
        ↓
 2. Convert to YAML metadata (automatically)
        ↓
@@ -123,14 +139,19 @@ PyXComparer/
 │   ├── comparator.py        # Diff logic
 │   ├── reporter.py          # Report generation
 │   ├── exceptions.py        # Custom exceptions
+│   ├── web/                 # Flask Web Application
+│   │   └── app.py
 │   └── gui/
 │       ├── __init__.py
 │       └── main_window.py   # GUI application
+├── templates/               # Web HTML templates
 ├── tests/
 │   ├── test_converter.py
 │   └── test_comparator.py
 ├── pyproject.toml           # Project metadata & dependencies
 ├── requirements.txt         # Pip dependencies
+├── Dockerfile               # Multi-stage build
+├── docker-compose.yml       # Docker orchestration
 └── pyxcomparer.py           # GUI entry point
 ```
 

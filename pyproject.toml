@@ -1,0 +1,92 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyxcomparer"
+version = "1.1.0"
+description = "Compare different versions of ODK XLSForms and generate human-readable change reports"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Joy Bindroo", email = "joybindroo@gmail.com"}
+]
+maintainers = [
+    {name = "Joy Bindroo", email = "joybindroo@gmail.com"}
+]
+keywords = [
+    "odk",
+    "xlsform",
+    "data-collection",
+    "survey",
+    "comparison",
+    "diff",
+    "public-health"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Office/Business",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.2.0",
+    "numpy>=1.26.0",
+    "openpyxl>=3.1.0",
+    "PyYAML>=6.0",
+    "Jinja2>=3.1.0",
+    "click>=8.0.0",
+]
+
+[project.optional-dependencies]
+gui = [
+    # tkinter is part of standard library
+]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "flake8>=6.1.0",
+    "isort>=5.12.0",
+    "mypy>=1.5.0",
+    "pre-commit>=3.4.0",
+]
+
+[project.scripts]
+pyxcomparer = "pyxcomparer.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/joybindroo/PyXComparer"
+Repository = "https://github.com/joybindroo/PyXComparer.git"
+Issues = "https://github.com/joybindroo/PyXComparer/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310', 'py311', 'py312']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --cov=pyxcomparer --cov-report=term-missing"

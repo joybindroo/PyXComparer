@@ -1,46 +1,259 @@
 # PyXComparer
-PyXComparer is a Python-based tool designed to simplify the process of monitoring changes between different versions of ODK XLSForms. It provides a user-friendly GUI interface for comparing XLSForm files, helping users to ensure data integrity and consistency in their XLSFom projects.  
 
+**PyXComparer** is a Python-based tool designed to simplify the process of monitoring changes between different versions of ODK XLSForms. It provides both GUI and CLI interfaces for comparing XLSForm files, helping teams ensure data integrity and consistency in their survey projects.
 
+[![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## Features
+## ✨ Features
 
-- Compare different versions of XLSForms to identify changes.
-- Visualize differences between forms with highlighting and categorization.
-- Export comparison results for further analysis or documentation.
+- **Compare XLSForm versions** - Identify changes between survey versions
+- **Multiple output formats** - HTML, JSON, YAML reports
+- **GUI and CLI interfaces** - Choose your preferred workflow
+- **Human-readable metadata** - Generate data dictionaries from XLSForms
+- **Batch processing** - Compare multiple form pairs at once
+- **Change categorization** - Track additions, deletions, and modifications
+- **Summary statistics** - Quick overview of changes
 
-## Getting Started
+## 🚀 Quick Start
 
-To get started with PyXComparer, follow these steps:
+### Installation
 
-1. Clone the repository to your local machine
-2. Navigate to the PyXComparer directory:
+**Option 1: Using pip**
+```bash
+pip install pyxcomparer
+```
 
-**cd PyXComparer**
+**Option 2: From source**
+```bash
+git clone https://github.com/joybindroo/PyXComparer.git
+cd PyXComparer
+pip install -e .
+```
 
-Install the required dependencies:
-**pip install -r requirements.txt**
+**Option 3: Development mode**
+```bash
+git clone https://github.com/joybindroo/PyXComparer.git
+cd PyXComparer
+pip install -e ".[dev]"
+```
 
-Run the PyXComparer application:
-**python pyxcomparer.py**
+### Usage
 
-## Usage
-- Select the two versions of the XLSForms you want to compare.
-- Comparison will be done by first creating YAML files for the forms and then doing a DIFF of the two YAML files.
-- The results will be displayed in the GUI, highlighting additions, deletions, and modifications.
+#### CLI Mode (Recommended for automation)
 
-## Human-Readable Data Dictionary or Metadata
-PyXComparer not only helps in comparing different versions of ODK XLSForms but also facilitates the generation of a human-readable data dictionary or metadata. By parsing and analyzing the structure of the XLSForm files, PyXComparer extracts information such as questions, choices, and settings like data validation and whether question is mandatory or not. This information is then organized and presented in a clear and concise format, making it easily understandable for teams working on data collection and analysis.
+**Compare two forms:**
+```bash
+pyxcomparer compare survey_v1.xlsx survey_v2.xlsx
+```
 
-The generated data dictionary provides detailed descriptions of each field, including the question text, data type, constraints, and relevant notes. Additionally, it highlights any changes or updates made between different versions of the XLSForms, ensuring that teams are aware of any modifications and can adapt their data collection and analysis processes accordingly.
+**Generate HTML report:**
+```bash
+pyxcomparer compare old.xlsx new.xlsx -o report.html --verbose
+```
 
-With this human-readable YAML syntax metadata, teams can quickly grasp the structure and requirements of the data collection forms, facilitating efficient communication and collaboration. It serves as a valuable reference for data collectors, analysts, and stakeholders, helping them better understand the dataset and make informed decisions based on the collected data.
+**Generate metadata only:**
+```bash
+pyxcomparer metadata survey.xlsx -o metadata.yaml
+pyxcomparer metadata survey.xlsx --format json
+```
 
+**Batch compare multiple forms:**
+```bash
+pyxcomparer batch ./forms/ -o ./reports/
+```
 
-## Contributing
-Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
+**Quick summary:**
+```bash
+pyxcomparer summary v1.xlsx v2.xlsx
+```
 
+#### GUI Mode
 
+```bash
+python pyxcomparer.py
+```
 
-## Acknowledgements
-PyXComparer was inspired by the need to streamline the process of managing changes between versions of ODK XLSForms when very large surveys are created by many team members and those are merged and improved overtime in limited resource settings. Special thanks to the ODK community for their support and inspiration.
+Or from installed package:
+```bash
+pyxcomparer gui
+```
+
+## 📋 Workflow
+
+```
+1. Select/Input XLSForm files (.xlsx)
+       ↓
+2. Convert to YAML metadata (automatically)
+       ↓
+3. Compare YAML files
+       ↓
+4. Generate reports (HTML/JSON/YAML)
+       ↓
+5. Review changes and export
+```
+
+## 📊 Output Formats
+
+### HTML Report
+- Side-by-side diff view
+- Color-coded changes (green=added, red=deleted, blue=modified)
+- Browser-friendly format
+
+### JSON Report
+- Machine-readable format
+- Categorized changes
+- Summary statistics
+- Easy to integrate with other tools
+
+### YAML Metadata
+- Human-readable data dictionary
+- Extracts questions, choices, settings
+- Includes validation rules and constraints
+
+## 🏗️ Project Structure
+
+```
+PyXComparer/
+├── src/pyxcomparer/
+│   ├── __init__.py          # Package exports
+│   ├── cli.py               # CLI interface
+│   ├── config.py            # Configuration
+│   ├── converter.py         # XLSForm → YAML conversion
+│   ├── comparator.py        # Diff logic
+│   ├── reporter.py          # Report generation
+│   ├── exceptions.py        # Custom exceptions
+│   └── gui/
+│       ├── __init__.py
+│       └── main_window.py   # GUI application
+├── tests/
+│   ├── test_converter.py
+│   └── test_comparator.py
+├── pyproject.toml           # Project metadata & dependencies
+├── requirements.txt         # Pip dependencies
+└── pyxcomparer.py           # GUI entry point
+```
+
+## 🔧 Development
+
+### Setup
+
+```bash
+# Clone repository
+git clone https://github.com/joybindroo/PyXComparer.git
+cd PyXComparer
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# or
+venv\Scripts\activate     # Windows
+
+# Install in development mode
+pip install -e ".[dev]"
+
+# Install pre-commit hooks
+pre-commit install
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=pyxcomparer
+
+# Run specific test file
+pytest tests/test_converter.py -v
+```
+
+### Code Quality
+
+```bash
+# Format code
+black src/ tests/
+
+# Sort imports
+isort src/ tests/
+
+# Lint
+flake8 src/ tests/
+
+# Type checking
+mypy src/
+```
+
+## 📖 API Usage
+
+### Python API
+
+```python
+from pyxcomparer import convert_xlsform_to_yaml, compare_yaml_files, generate_html_report
+
+# Convert XLSForm to YAML
+yaml_path = convert_xlsform_to_yaml("survey_v1.xlsx")
+
+# Compare two YAML files
+diff = compare_yaml_files("form_v1.yaml", "form_v2.yaml", output_format="dict")
+
+# Generate HTML report
+report_path = generate_html_report("form_v1.yaml", "form_v2.yaml", output_path="report.html")
+
+# Get summary statistics
+from pyxcomparer.comparator import get_diff_summary
+summary = get_diff_summary("form_v1.yaml", "form_v2.yaml")
+print(f"Total changes: {summary['total_changes']}")
+```
+
+## 🎯 Use Cases
+
+### Public Health Surveys
+Track changes in large health surveys when multiple team members collaborate on form design.
+
+### Longitudinal Studies
+Monitor modifications between survey rounds in longitudinal data collection projects.
+
+### Multi-country Studies
+Compare survey adaptations across different country contexts.
+
+### Quality Assurance
+Validate that form changes don't break existing data collection workflows.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run tests (`pytest`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+## 📝 Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
+
+## 🙏 Acknowledgements
+
+PyXComparer was inspired by the need to streamline the process of managing changes between versions of ODK XLSForms when very large surveys are created by many team members and those are merged and improved over time in limited resource settings.
+
+Special thanks to the ODK community for their support and inspiration.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📧 Contact
+
+**Joy Bindroo**  
+Email: joybindroo@gmail.com
+
+## 🗂️ Related Projects
+
+- [ODK XLSForm](https://xlsform.org/) - XLSForm standard
+- [ODK Central](https://docs.getodk.org/central-intro/) - ODK server
+- [pyxform](https://github.com/XLSForm/pyxform) - XLSForm to XForms converter

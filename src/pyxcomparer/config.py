@@ -31,7 +31,7 @@ class Config:
 
     # Diff settings
     DIFF_WRAP_COLUMN: int = 80
-    MAX_CHOICES_DISPLAY: int = 30
+    MAX_CHOICES_DISPLAY: Optional[int] = 50
 
     # Colors for diff display
     COLOR_ADDED: str = "green"

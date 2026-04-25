@@ -57,10 +57,21 @@ def convert_yaml_to_word(metadata, output_path="specification.docx"):
             if len(parts) > 1:
                 choice_list_name = parts[1]
                 choice_data = choices.get(choice_list_name, [])
-                
+
                 if choice_data:
-                    options = [f"{c.get('name')}: {c.get('label')}" for c in choice_data]
-                    details.append("Options:\n" + "\n".join(options))
+                    # Apply choice limit from config
+                    from pyxcomparer.config import config
+                    limit = config.MAX_CHOICES_DISPLAY
+
+                    if limit and len(choice_data) > limit:
+                        display_choices = choice_data[:limit]
+                        footer = f"\n... ({len(choice_data) - limit} more options omitted)"
+                    else:
+                        display_choices = choice_data
+                        footer = ""
+
+                    options = [f"{c.get('name')}: {c.get('label')}" for c in display_choices]
+                    details.append("Options:\n" + "\n".join(options) + footer)
                 else:
                     details.append("Choice list not found in metadata.")
         

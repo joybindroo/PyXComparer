@@ -159,8 +159,8 @@ def metadata(xlsform: str, output: Optional[str], format: str, no_choices: bool)
         yaml_path = convert_xlsform_to_yaml(
             xlsform,
             output_path=output_path if format == "yaml" else None,
-            include_choices=not no_choices,
         )
+
 
         click.echo(f"✓ YAML metadata: {yaml_path}")
 
@@ -313,7 +313,13 @@ def word(yaml_file: str, output: Optional[str]):
     """
     try:
         click.echo(f"Generating Word document from: {yaml_file}")
-        word_path = convert_yaml_to_word(yaml_file, output_path=output)
+
+        # Load YAML content to pass the dictionary to the converter
+        import yaml
+        with open(yaml_file, 'r', encoding='utf-8') as f:
+            metadata = yaml.safe_load(f)
+
+        word_path = convert_yaml_to_word(metadata, output_path=output)
         click.echo(f"✓ Word document created: {word_path}")
     except Exception as e:
         click.echo(f"Error: {e}", err=True)

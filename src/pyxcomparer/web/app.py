@@ -57,17 +57,16 @@ def index():
                 output_path=OUTPUT_FOLDER / f"report_{f1.filename}_{f2.filename}.html"
             )
 
-            # Generate Word Specifications for both forms
-            word1_path = convert_yaml_to_word(yaml1, output_path=OUTPUT_FOLDER / f"spec_{f1.filename}.docx")
+            # Generate Word Specification for the NEWER form only
             word2_path = convert_yaml_to_word(yaml2, output_path=OUTPUT_FOLDER / f"spec_{f2.filename}.docx")
 
             return render_template(
                 "result.html",
                 summary=summary,
                 report_url=url_for("download_report", filename=report_path.name),
-                word1_url=url_for("download_report", filename=word1_path.name),
-                word2_url=url_for("download_report", filename=word2_path.name)
+                word_url=url_for("download_report", filename=word2_path.name)
             )
+
 
 
         except XLSFormError as e:

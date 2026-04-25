@@ -87,13 +87,13 @@ _____________________________________
                     self.yaml1, self.yaml2, output_path=Path(fname)
                 )
 
-                # Generate Word Specifications
-                word1_path = convert_yaml_to_word(self.yaml1, output_path=Path(f"{Path(fname).stem}_v1_spec.docx"))
+                # Generate Word Specification for the NEWER form only
                 word2_path = convert_yaml_to_word(self.yaml2, output_path=Path(f"{Path(fname).stem}_v2_spec.docx"))
 
-                self._show_message(f"Reports and Word Specifications saved successfully.\n\nHTML: {report_path.name}\nWord 1: {word1_path.name}\nWord 2: {word2_path.name}")
+                self._show_message(f"Reports and Word Specification saved successfully.\n\nHTML: {report_path.name}\nWord: {word2_path.name}")
                 print(f">> Report saved: {report_path}")
-                print(f">> Word specs saved: {word1_path}, {word2_path}")
+                print(f">> Word spec saved: {word2_path}")
+
 
         except Exception as e:
             self._show_message(f"An error occurred: {str(e)}")

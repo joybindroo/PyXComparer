@@ -11,6 +11,7 @@ from pyxcomparer.reporter import generate_json_report, generate_summary_report
 from pyxcomparer.comparator import get_diff_summary
 from pyxcomparer.exceptions import XLSFormError, XLSFormNotFoundError
 from pyxcomparer.config import config
+from pyxcomparer.word_converter import convert_yaml_to_word
 
 
 @click.group()
@@ -64,15 +65,11 @@ def compare(
     """Compare two XLSForm files and generate a diff report.
 
     OLD_FORM: Path to older XLSForm file (.xlsx)
-
     NEW_FORM: Path to newer XLSForm file (.xlsx)
 
     Examples:
-
         pyxcomparer compare survey_v1.xlsx survey_v2.xlsx
-
         pyxcomparer compare old.xlsx new.xlsx -o report.html -v
-
         pyxcomparer compare form1.xlsx form2.xlsx --format all
     """
     try:
@@ -80,7 +77,6 @@ def compare(
         click.echo(f"  Old: {old_form}")
         click.echo(f"  New: {new_form}")
 
-        # Convert to YAML
         yaml_dir_path = Path(yaml_dir) if yaml_dir else None
         yaml1 = convert_xlsform_to_yaml(old_form, output_dir=yaml_dir_path)
         yaml2 = convert_xlsform_to_yaml(new_form, output_dir=yaml_dir_path)
@@ -89,7 +85,6 @@ def compare(
             click.echo(f"  YAML 1: {yaml1}")
             click.echo(f"  YAML 2: {yaml2}")
 
-        # Get summary
         summary = get_diff_summary(yaml1, yaml2)
         click.echo(f"\nChanges detected:")
         click.echo(f"  Total: {summary['total_changes']}")
@@ -97,7 +92,6 @@ def compare(
         click.echo(f"  Deletions: {summary['deletions']}")
         click.echo(f"  Modifications: {summary['modifications']}")
 
-        # Generate reports
         output_path = Path(output) if output else None
 
         if format in ["html", "all"]:
@@ -151,11 +145,8 @@ def metadata(xlsform: str, output: Optional[str], format: str, no_choices: bool)
     XLSFORM: Path to XLSForm file (.xlsx)
 
     Examples:
-
         pyxcomparer metadata survey.xlsx
-
         pyxcomparer metadata form.xlsx -o metadata.yaml
-
         pyxcomparer metadata survey.xlsx --format json
     """
     try:
@@ -220,9 +211,7 @@ def batch(forms_dir: str, output_dir: Optional[str], pattern: str, verbose: bool
     File pairs are identified by common prefixes (e.g., survey_v1.xlsx and survey_v2.xlsx).
 
     Examples:
-
         pyxcomparer batch ./forms/
-
         pyxcomparer batch ./surveys/ -o ./reports/ -v
     """
     try:
@@ -230,7 +219,6 @@ def batch(forms_dir: str, output_dir: Optional[str], pattern: str, verbose: bool
         output_path = Path(output_dir) if output_dir else forms_path / "reports"
         output_path.mkdir(parents=True, exist_ok=True)
 
-        # Find all XLSForm files
         xlsx_files = sorted(forms_path.glob(pattern))
 
         if not xlsx_files:
@@ -240,8 +228,6 @@ def batch(forms_dir: str, output_dir: Optional[str], pattern: str, verbose: bool
         click.echo(f"Found {len(xlsx_files)} XLSForm files")
         click.echo(f"Output directory: {output_path}")
 
-        # Group files by base name (simple pairing logic)
-        # This is a basic implementation - can be enhanced
         compared = 0
         for i in range(0, len(xlsx_files) - 1, 2):
             file1 = xlsx_files[i]
@@ -283,11 +269,9 @@ def summary(old_form: str, new_form: str):
     """Show quick summary of changes between two forms.
 
     OLD_FORM: Path to older XLSForm file
-
     NEW_FORM: Path to newer XLSForm file
 
     Example:
-
         pyxcomparer summary v1.xlsx v2.xlsx
     """
     try:
@@ -304,6 +288,33 @@ def summary(old_form: str, new_form: str):
         click.echo(f"Modifications: {summary['modifications']}")
         click.echo()
 
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        sys.exit(1)
+
+
+@main.command()
+@click.argument("yaml_file", type=click.Path(exists=True))
+@click.option(
+    "-o",
+    "--output",
+    type=click.Path(),
+    default=None,
+    help="Output Word document path",
+)
+def word(yaml_file: str, output: Optional[str]):
+    """Convert YAML metadata to a detailed Word document.
+
+    YAML_FILE: Path to the YAML metadata file.
+
+    Example:
+        pyxcomparer word survey_yaml.yaml
+        pyxcomparer word survey_yaml.yaml -o survey_spec.docx
+    """
+    try:
+        click.echo(f"Generating Word document from: {yaml_file}")
+        word_path = convert_yaml_to_word(yaml_file, output_path=output)
+        click.echo(f"✓ Word document created: {word_path}")
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         sys.exit(1)

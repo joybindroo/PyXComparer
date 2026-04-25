@@ -3,7 +3,7 @@
 **PyXComparer** is a Python-based tool designed to simplify the process of monitoring changes between different versions of ODK XLSForms. It provides GUI, CLI, and Web interfaces for comparing XLSForm files, helping teams ensure data integrity and consistency in their survey projects.
  
 [![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache 2.0-green.svg)](LICENSE)
  
 ## ✨ Features
  
@@ -277,8 +277,9 @@ PyXComparer was inspired by the need to streamline the process of managing chang
 Special thanks to the ODK community for their support and inspiration.
  
 ## 📄 License
- 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+  
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
  
 ## 📧 Contact
  

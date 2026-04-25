@@ -8,7 +8,9 @@ from typing import Optional
 from pyxcomparer.converter import convert_xlsform_to_yaml
 from pyxcomparer.comparator import compare_yaml_files
 from pyxcomparer.reporter import generate_html_report
+from pyxcomparer.word_converter import convert_yaml_to_word
 from pyxcomparer.config import config
+
 
 
 class PyXComparerApp:
@@ -84,8 +86,14 @@ _____________________________________
                 report_path = generate_html_report(
                     self.yaml1, self.yaml2, output_path=Path(fname)
                 )
-                self._show_message("File Saved Successfully. Click OK to exit.")
+
+                # Generate Word Specifications
+                word1_path = convert_yaml_to_word(self.yaml1, output_path=Path(f"{Path(fname).stem}_v1_spec.docx"))
+                word2_path = convert_yaml_to_word(self.yaml2, output_path=Path(f"{Path(fname).stem}_v2_spec.docx"))
+
+                self._show_message(f"Reports and Word Specifications saved successfully.\n\nHTML: {report_path.name}\nWord 1: {word1_path.name}\nWord 2: {word2_path.name}")
                 print(f">> Report saved: {report_path}")
+                print(f">> Word specs saved: {word1_path}, {word2_path}")
 
         except Exception as e:
             self._show_message(f"An error occurred: {str(e)}")

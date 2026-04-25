@@ -7,7 +7,9 @@ from flask import Flask, render_template, request, send_file, redirect, url_for,
 from pyxcomparer.converter import convert_xlsform_to_yaml
 from pyxcomparer.comparator import get_diff_summary
 from pyxcomparer.reporter import generate_html_report
+from pyxcomparer.word_converter import convert_yaml_to_word
 from pyxcomparer.exceptions import XLSFormError
+
 
 app = Flask(__name__, 
             template_folder='templates', 
@@ -51,15 +53,22 @@ def index():
             
             # Generate HTML report
             report_path = generate_html_report(
-                yaml1, yaml2, 
+                yaml1, yaml2,
                 output_path=OUTPUT_FOLDER / f"report_{f1.filename}_{f2.filename}.html"
             )
 
+            # Generate Word Specifications for both forms
+            word1_path = convert_yaml_to_word(yaml1, output_path=OUTPUT_FOLDER / f"spec_{f1.filename}.docx")
+            word2_path = convert_yaml_to_word(yaml2, output_path=OUTPUT_FOLDER / f"spec_{f2.filename}.docx")
+
             return render_template(
-                "result.html", 
-                summary=summary, 
-                report_url=url_for("download_report", filename=report_path.name)
+                "result.html",
+                summary=summary,
+                report_url=url_for("download_report", filename=report_path.name),
+                word1_url=url_for("download_report", filename=word1_path.name),
+                word2_url=url_for("download_report", filename=word2_path.name)
             )
+
 
         except XLSFormError as e:
             flash(f"XLSForm Error: {str(e)}")

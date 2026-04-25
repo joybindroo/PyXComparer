@@ -136,6 +136,7 @@ pyxcomparer gui
 ### Word Specification (.docx)
 - Comprehensive technical documentation of the survey
 - Includes bilingual labels, relevance, calculations, constraints, and choice lists
+- **Smart Choice Handling**: Automatically limits the number of choices displayed per question (default: 25) to keep documents manageable. This limit is configurable in `config.py` (set to `None` for unlimited).
 - Ideal for formal review and stakeholder approval
  
 ## 🏗️ Project Structure

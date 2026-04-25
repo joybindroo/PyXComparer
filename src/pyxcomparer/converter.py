@@ -21,18 +21,32 @@ def convert_xlsform_to_yaml(xlsform_path, output_path=None):
             # Filter out rows without a 'type' or 'name' (like section headers)
             if pd.isna(row['type']) or pd.isna(row['name']):
                 continue
-            
+
+            # Handle multi-language labels (e.g., label::English, label::Hindi)
+            # We prefer English if available, otherwise take the first label column
+            label = 'N/A'
+            label_cols = [col for col in survey_df.columns if col.startswith('label')]
+            if label_cols:
+                # Try to find English label first
+                eng_col = next((col for col in label_cols if 'English' in col), None)
+                if eng_col and not pd.isna(row[eng_col]):
+                    label = str(row[eng_col])
+                elif not pd.isna(row[label_cols[0]]):
+                    label = str(row[label_cols[0]])
+
             item = {
                 'type': str(row['type']),
                 'name': str(row['name']),
-                'label': str(row['label']) if not pd.isna(row['label']) else 'N/A',
+                'label': label,
             }
-            
+
             # Add optional columns if they exist
             for col in ['constraint', 'relevance', 'appearance', 'required']:
-                if col in survey_df.columns and not pd.isna(row[col]):
-                    item[col] = str(row[col])
-            
+                # Check for multi-language versions of these columns too
+                actual_col = next((c for c in survey_df.columns if c.startswith(col)), None)
+                if actual_col and not pd.isna(row[actual_col]):
+                    item[col] = str(row[actual_col])
+
             survey_data.append(item)
 
         # Process choices into a dictionary mapping list_name -> list of choices
@@ -43,9 +57,19 @@ def convert_xlsform_to_yaml(xlsform_path, output_path=None):
             for list_name, group in grouped:
                 choices_list = []
                 for _, row in group.iterrows():
+                    # Handle multi-language labels for choices
+                    label = 'N/A'
+                    label_cols = [col for col in choices_df.columns if col.startswith('label')]
+                    if label_cols:
+                        eng_col = next((col for col in label_cols if 'English' in col), None)
+                        if eng_col and not pd.isna(row[eng_col]):
+                            label = str(row[eng_col])
+                        elif not pd.isna(row[label_cols[0]]):
+                            label = str(row[label_cols[0]])
+
                     choices_list.append({
                         'name': str(row['name']),
-                        'label': str(row['label']) if not pd.isna(row['label']) else 'N/A'
+                        'label': label
                     })
                 choices_data[str(list_name)] = choices_list
 

@@ -2,6 +2,7 @@ import yaml
 import pandas as pd
 from pathlib import Path
 from pyxcomparer.exceptions import XLSFormError
+from pyxcomparer.config import config
 
 def convert_xlsform_to_yaml(xlsform_path, output_path=None):
     """
@@ -10,7 +11,7 @@ def convert_xlsform_to_yaml(xlsform_path, output_path=None):
     try:
         path = Path(xlsform_path)
         xls = pd.ExcelFile(path)
-        
+
         # Extract survey and choices sheets
         survey_df = xls.parse('survey')
         choices_df = xls.parse('choices') if 'choices' in xls.sheet_names else pd.DataFrame()
@@ -71,6 +72,14 @@ def convert_xlsform_to_yaml(xlsform_path, output_path=None):
                         'name': str(row['name']),
                         'label': label
                     })
+
+                # Apply choice limit from config
+                limit = config.MAX_CHOICES_DISPLAY
+                if limit and limit > 0 and len(choices_list) > limit:
+                    choices_list = choices_list[:limit]
+                    # Add a special entry to indicate truncation
+                    choices_list.append({'name': 'truncated', 'label': f"... ({len(group) - limit} more options omitted)"})
+
                 choices_data[str(list_name)] = choices_list
 
         full_metadata = {
@@ -82,7 +91,7 @@ def convert_xlsform_to_yaml(xlsform_path, output_path=None):
             with open(output_path, 'w', encoding='utf-8') as f:
                 yaml.dump(full_metadata, f, sort_keys=False, allow_unicode=True)
             return Path(output_path)
-        
+
         return full_metadata
 
     except Exception as e:

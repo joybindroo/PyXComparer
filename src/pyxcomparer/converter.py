@@ -42,7 +42,7 @@ def convert_xlsform_to_yaml(xlsform_path, output_path=None):
             }
 
             # Add optional columns if they exist
-            for col in ['constraint', 'relevance', 'appearance', 'required']:
+            for col in ['constraint', 'relevance', 'appearance', 'required', 'calculation']:
                 # Check for multi-language versions of these columns too
                 actual_col = next((c for c in survey_df.columns if c.startswith(col)), None)
                 if actual_col and not pd.isna(row[actual_col]):

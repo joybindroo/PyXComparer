@@ -75,11 +75,13 @@ def convert_yaml_to_word(metadata, output_path="specification.docx"):
                 else:
                     details.append("Choice list not found in metadata.")
         
-        # Add other details like constraints or relevance if they exist
+        # Add other details like constraints, relevance, or calculations if they exist
         if 'constraint' in item:
             details.append(f"Constraint: {item['constraint']}")
         if 'relevance' in item:
             details.append(f"Relevance: {item['relevance']}")
+        if 'calculation' in item:
+            details.append(f"Calculation: {item['calculation']}")
 
         row_cells[3].text = "\n".join(details) if details else "N/A"
 
